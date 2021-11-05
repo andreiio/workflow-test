@@ -1,0 +1,28 @@
+on: [push]
+
+env:
+  BASE_URL: http://base.url
+  BASE_PREFIX: workflow-test
+
+  RCLONE_CONFIG_B2_TYPE: b2
+  RCLONE_CONFIG_B2_ACCOUNT: ${{ secrets.RCLONE_CONFIG_B2_ACCOUNT }}
+  RCLONE_CONFIG_B2_KEY: ${{ secrets.RCLONE_CONFIG_B2_KEY }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          mkdir dist
+          touch dist/$GITHUB_SHA
+
+      - name: Deploy
+        uses: andreiio/rclone-action@v1
+        with:
+          args: sync dist --delete-excluded b2:andreiio/"${{ env.BASE_PREFIX }}"
