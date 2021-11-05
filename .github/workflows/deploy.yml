@@ -25,4 +25,4 @@ jobs:
       - name: Deploy
         uses: andreiio/rclone-action@v1
         with:
-          args: sync dist --delete-excluded b2:andreiio/"${{ env.BASE_PREFIX }}"
+          args: sync dist b2:andreiio/"${{ env.BASE_PREFIX }}"
